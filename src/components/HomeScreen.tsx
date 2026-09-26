@@ -9,6 +9,7 @@ const cards = [
   { title: 'CADASTRO', desc: 'Cadastro do aluno' },
   { title: 'LOCALIZAÇÃO', desc: 'Encontre a Evolution Fitness. Centro — Três Rios/RJ' },
   { title: 'EVENTOS', desc: 'Eventos e experiências da Evolution Fitness' },
+  { title: 'REDES SOCIAIS', desc: 'Acompanhe a Evolution Fitness' },
   { title: 'OUTROS RECURSOS', desc: 'Outros recursos da Evolution Fitness' },
 ];
 
