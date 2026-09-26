@@ -1,0 +1,6 @@
+{
+  "name": "EVOLUTION FITNESS — CENTRAL DE ATENDIMENTO",
+  "description": "Aplicativo central de atendimento da Evolution Fitness.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
