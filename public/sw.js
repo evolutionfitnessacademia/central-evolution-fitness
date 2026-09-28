@@ -1,14 +1,15 @@
 const CACHE_NAME = 'evolution-fitness-pwa-v1';
+const BASE_PATH = '/central-evolution-fitness/';
 
 // Recursos essenciais para inicialização offline
 const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/apple-touch-icon.png',
-  '/favicon.png',
+  BASE_PATH,
+  BASE_PATH + 'index.html',
+  BASE_PATH + 'manifest.json',
+  BASE_PATH + 'icons/icon-192.png',
+  BASE_PATH + 'icons/icon-512.png',
+  BASE_PATH + 'apple-touch-icon.png',
+  BASE_PATH + 'favicon.png',
 ];
 
 // Instalação do Service Worker
@@ -78,7 +79,7 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          return caches.match('/index.html');
+          return caches.match(BASE_PATH + 'index.html');
         })
     );
     return;
