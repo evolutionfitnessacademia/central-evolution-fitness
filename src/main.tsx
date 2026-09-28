@@ -6,8 +6,9 @@ import './index.css';
 // Registro do Service Worker para suporte a PWA (executado exclusivamente no navegador)
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    const swPath = new URL('sw.js', import.meta.env.BASE_URL).pathname;
     navigator.serviceWorker
-      .register('/sw.js')
+      .register(swPath)
       .then(() => {
         // Service worker registrado com sucesso
       })
