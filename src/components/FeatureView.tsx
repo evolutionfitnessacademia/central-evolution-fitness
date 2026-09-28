@@ -1,42 +1,69 @@
 import { useState } from 'react';
+import { getPublicCadastroUrl } from '../utils/publicUrl';
+import { Resource } from '../types/resource';
 
-export default function FeatureView({ feature, onBack }: { feature: { title: string, desc: string }, onBack: () => void }) {
+interface FeatureViewProps {
+  feature: { title: string; desc: string };
+  resource?: Resource;
+  outrosResources?: Resource[];
+  onBack: () => void;
+}
+
+export default function FeatureView({
+  feature,
+  resource,
+  outrosResources = [],
+  onBack,
+}: FeatureViewProps) {
   const [copied, setCopied] = useState(false);
   const [copiedEventId, setCopiedEventId] = useState<string | null>(null);
-  const isParq = feature.title === 'PAR-Q';
-  const isAnamnese = feature.title === 'ANAMNESE';
-  const isAvaliacaoFisica = feature.title === 'AVALIAÇÃO FÍSICA';
-  const isCadastro = feature.title === 'CADASTRO';
-  const isLocalizacao = feature.title === 'LOCALIZAÇÃO';
-  const isEventos = feature.title === 'EVENTOS';
-  const isRedesSociais = feature.title === 'REDES SOCIAIS';
-  const isOutros = feature.title === 'OUTROS RECURSOS';
 
-  const anamneseLink = 'https://evolutionfitnessacademia.github.io/Avalia-o-fisica-Anamnese/';
-  const anamneseMsg = `Olá! Tudo bem?
+  const titleUpper = (resource?.name || feature.title).toUpperCase();
+  const isNovoAluno = titleUpper.includes('NOVO ALUNO') || resource?.id === 'cad_novo_aluno';
+  const isParq = titleUpper === 'PAR-Q' || resource?.id === 'par_q';
+  const isAnamnese = titleUpper === 'ANAMNESE' || resource?.id === 'anamnese';
+  const isAvaliacaoFisica =
+    titleUpper === 'AVALIAÇÃO FÍSICA' || titleUpper.includes('AVALIAÇÃO') || resource?.id === 'avaliacao_fisica';
+  const isCadastro = titleUpper === 'CADASTRO' || resource?.id === 'cadastro';
+  const isLocalizacao = titleUpper.includes('LOCALIZAÇÃO') || resource?.id === 'localizacao';
+  const isEventos = titleUpper.includes('EVENTOS') || resource?.id === 'eventos';
+  const isRedesSociais = titleUpper.includes('REDES SOCIAIS') || resource?.id === 'redes_sociais';
+  const isOutros = titleUpper.includes('OUTROS RECURSOS');
+
+  // Valores padrão oficiais
+  const defaultNovoAlunoLink = getPublicCadastroUrl();
+  const defaultNovoAlunoMsg = `Olá! Tudo bem?
+Para iniciarmos sua matrícula na Evolution Fitness, pedimos que você preencha seu Cadastro de Novo Aluno pelo link abaixo:
+
+${defaultNovoAlunoLink}
+
+O formulário é rápido e inclui o Cadastro, PAR-Q e Anamnese em um único fluxo. Após preencher, envie pelo WhatsApp conforme as orientações da página.`;
+
+  const defaultAnamneseLink = 'https://evolutionfitnessacademia.github.io/Avalia-o-fisica-Anamnese/';
+  const defaultAnamneseMsg = `Olá! Tudo bem?
 Para iniciarmos seu atendimento na Evolution Fitness, pedimos que você preencha a Anamnese pelo link abaixo:
 
 https://evolutionfitnessacademia.github.io/Avalia-o-fisica-Anamnese/
 
 Após preencher, envie o formulário conforme as orientações da página.`;
 
-  const parqLink = 'https://evolutionfitnessacademia.github.io/Parq/';
-  const parqMsg = `Olá! Tudo bem?
+  const defaultParqLink = 'https://evolutionfitnessacademia.github.io/Parq/';
+  const defaultParqMsg = `Olá! Tudo bem?
 Para iniciarmos seu atendimento na Evolution Fitness, pedimos que você preencha o PAR-Q pelo link abaixo:
 
 https://evolutionfitnessacademia.github.io/Parq/
 
 Após preencher, envie o formulário conforme as orientações da página.`;
 
-  const cadastroLink = 'https://evolutionfitness-tr.github.io/Cadastro-Evolution-Fitness-/';
-  const cadastroMsg = `Olá! Tudo bem?
+  const defaultCadastroLink = 'https://evolutionfitness-tr.github.io/Cadastro-Evolution-Fitness-/';
+  const defaultCadastroMsg = `Olá! Tudo bem?
 Para iniciarmos seu atendimento na Evolution Fitness, pedimos que você preencha seu cadastro pelo link abaixo:
 
 https://evolutionfitness-tr.github.io/Cadastro-Evolution-Fitness-/
 
 Após preencher, envie o formulário conforme as orientações da página.`;
 
-  const avaliacaoFisicaMsg = `Olá! Tudo bem?
+  const defaultAvaliacaoFisicaMsg = `Olá! Tudo bem?
 
 Passando para lembrar da sua avaliação física na Evolution Fitness.
 
@@ -49,50 +76,82 @@ Por favor, confirme sua presença respondendo esta mensagem.`;
     {
       id: 'arraia',
       name: 'ARRAIÁ DA EVOLUTION FITNESS',
-      link: 'https://evolutionfitness-tr.github.io/Eventos-Evolution-Fitness-/',
-      shareMsg: `Olá! Tudo bem?
-
-A Evolution Fitness está realizando o evento:
-
-Arraiá da Evolution Fitness
-
-Confira os detalhes e participe:
-
-https://evolutionfitness-tr.github.io/Eventos-Evolution-Fitness-/`,
+      link: resource?.link || 'https://evolutionfitness-tr.github.io/Eventos-Evolution-Fitness-/',
+      shareMsg:
+        resource?.whatsappMessage ||
+        `Olá! Tudo bem?\n\nA Evolution Fitness está realizando o evento:\n\nArraiá da Evolution Fitness\n\nConfira os detalhes e participe:\n\nhttps://evolutionfitness-tr.github.io/Eventos-Evolution-Fitness-/`,
     },
   ];
 
   const facebookLink = 'https://www.facebook.com/share/19HWTWwPLc/';
-  const instagramLink = 'https://www.instagram.com/evolutionfitness_tr/';
+  const instagramLink = resource?.link || 'https://www.instagram.com/evolutionfitness_tr/';
   const tiktokLink = 'https://www.tiktok.com/@sabrinaevolution';
 
-  const mapLink = 'https://tinyurl.com/4eubvvez';
+  const mapLink = resource?.link || 'https://tinyurl.com/4eubvvez';
   const address = `Evolution Fitness
 Rua Dr. Valmir Peçanha, 50
 Centro — Três Rios/RJ
 CEP 25802-180`;
-  const localizacaoMsg = `${address}
+  const defaultLocalizacaoMsg = `${address}
 
 Link para localização:
 ${mapLink}`;
 
-  const googleLink = 'https://g.page/r/CXwn8jQ4-Z22EBM/review';
-  const googleMsg = `Olá! Tudo bem?
+  // Resolução dinâmica com base no armazenamento do ADM
+  const effectiveLink =
+    resource?.link ||
+    (isNovoAluno
+      ? defaultNovoAlunoLink
+      : isAnamnese
+      ? defaultAnamneseLink
+      : isParq
+      ? defaultParqLink
+      : isCadastro
+      ? defaultCadastroLink
+      : isLocalizacao
+      ? mapLink
+      : '');
 
-Sua opinião é muito importante para a Evolution Fitness.
+  const effectiveWhatsappMsg =
+    resource?.whatsappMessage ||
+    (isNovoAluno
+      ? defaultNovoAlunoMsg
+      : isAnamnese
+      ? defaultAnamneseMsg
+      : isParq
+      ? defaultParqMsg
+      : isCadastro
+      ? defaultCadastroMsg
+      : isAvaliacaoFisica
+      ? defaultAvaliacaoFisicaMsg
+      : isLocalizacao
+      ? defaultLocalizacaoMsg
+      : '');
 
-Se você já treina com a gente, poderia deixar uma avaliação sobre sua experiência no nosso Perfil da Empresa no Google?
+  const effectiveEmailSubject =
+    resource?.emailSubject ||
+    (isNovoAluno
+      ? 'Cadastro de Novo Aluno — Evolution Fitness'
+      : isAnamnese
+      ? 'Anamnese — Evolution Fitness'
+      : isParq
+      ? 'PAR-Q — Evolution Fitness'
+      : isCadastro
+      ? 'Cadastro — Evolution Fitness'
+      : `${resource?.name || feature.title} — Evolution Fitness`);
 
-Sua opinião ajuda outras pessoas de Três Rios a conhecerem a Evolution Fitness.
+  const effectiveEmailBody = resource?.emailBody || effectiveWhatsappMsg;
 
-É rápido e pode ser realizado pelo link abaixo:
+  const effectiveButtonText =
+    resource?.buttonText ||
+    (isNovoAluno || isAnamnese || isParq || isCadastro
+      ? 'ABRIR FORMULÁRIO'
+      : isLocalizacao
+      ? 'COMO CHEGAR'
+      : 'ABRIR');
 
-https://g.page/r/CXwn8jQ4-Z22EBM/review
-
-Muito obrigado por fazer parte da Evolution Fitness.`;
-
-  const handleOpenForm = (link: string) => {
-    window.open(link, '_blank');
+  const handleOpenForm = (url: string) => {
+    window.open(url, '_blank');
   };
 
   const handleWhatsApp = (msg: string) => {
@@ -118,126 +177,288 @@ Muito obrigado por fazer parte da Evolution Fitness.`;
   return (
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 bg-black text-white p-4 z-10">
-        <button onClick={onBack} className="text-white text-sm uppercase tracking-wider underline">Voltar</button>
+        <button
+          onClick={onBack}
+          className="text-white text-sm uppercase tracking-wider underline cursor-pointer"
+        >
+          Voltar
+        </button>
         <h1 className="font-bold uppercase text-xl mt-4">
-            {isLocalizacao ? 'LOCALIZAÇÃO DA EVOLUTION FITNESS' : isEventos ? 'EVENTOS' : feature.title}
+          {isLocalizacao
+            ? 'LOCALIZAÇÃO DA EVOLUTION FITNESS'
+            : isEventos
+            ? 'EVENTOS'
+            : resource?.name || feature.title}
         </h1>
       </header>
+
       <main className="p-6">
         <p className="text-slate-700 font-medium">
-            {isLocalizacao ? 'Estamos no Centro de Três Rios.' : isEventos ? 'Confira os eventos e experiências especiais da Evolution Fitness.' : isRedesSociais ? 'Acompanhe a Evolution Fitness nas redes sociais.' : isAvaliacaoFisica ? 'Lembrete e confirmação da avaliação física.' : feature.desc}
+          {isLocalizacao
+            ? 'Estamos no Centro de Três Rios.'
+            : isEventos
+            ? 'Confira os eventos e experiências especiais da Evolution Fitness.'
+            : isRedesSociais
+            ? 'Acompanhe a Evolution Fitness nas redes sociais.'
+            : isAvaliacaoFisica
+            ? 'Lembrete e confirmação da avaliação física.'
+            : resource?.description || feature.desc}
         </p>
-        
+
+        {/* LOCALIZAÇÃO */}
         {isLocalizacao ? (
           <div className="mt-8 space-y-3">
             <p className="text-slate-600 text-sm whitespace-pre-line">{address}</p>
-            <button onClick={() => handleOpenForm(mapLink)} className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors">Como Chegar</button>
-            <button onClick={() => handleCopy(address)} className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors">{copied ? 'ENDEREÇO COPIADO' : 'Copiar Endereço'}</button>
-            <button onClick={() => handleWhatsApp(localizacaoMsg)} className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors">Compartilhar Localização</button>
-            <button onClick={onBack} className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors">Voltar</button>
+            <button
+              onClick={() => handleOpenForm(effectiveLink)}
+              className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors cursor-pointer"
+            >
+              {effectiveButtonText}
+            </button>
+            <button
+              onClick={() => handleCopy(address)}
+              className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors cursor-pointer"
+            >
+              {copied ? 'ENDEREÇO COPIADO' : 'Copiar Endereço'}
+            </button>
+            <button
+              onClick={() => handleWhatsApp(effectiveWhatsappMsg)}
+              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors cursor-pointer"
+            >
+              Compartilhar Localização
+            </button>
+            <button
+              onClick={onBack}
+              className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              Voltar
+            </button>
           </div>
         ) : isEventos ? (
+          /* EVENTOS */
           <div className="mt-8 space-y-6">
             {eventosList.map((evento) => (
-              <div key={evento.id} className="border border-slate-200 rounded-lg p-5 space-y-3 bg-white shadow-sm">
-                <h2 className="text-lg font-bold uppercase text-black tracking-tight">{evento.name}</h2>
-                <button 
-                  onClick={() => handleOpenForm(evento.link)} 
-                  className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors"
+              <div
+                key={evento.id}
+                className="border border-slate-200 rounded-lg p-5 space-y-3 bg-white shadow-sm"
+              >
+                <h2 className="text-lg font-bold uppercase text-black tracking-tight">
+                  {evento.name}
+                </h2>
+                <button
+                  onClick={() => handleOpenForm(evento.link)}
+                  className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors cursor-pointer"
                 >
-                  Abrir Evento
+                  {effectiveButtonText}
                 </button>
-                <button 
-                  onClick={() => handleWhatsApp(evento.shareMsg)} 
-                  className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors"
+                <button
+                  onClick={() => handleWhatsApp(evento.shareMsg)}
+                  className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors cursor-pointer"
                 >
                   Compartilhar Evento
                 </button>
-                <button 
-                  onClick={() => handleCopyEvent(evento.id, evento.link)} 
-                  className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors"
+                <button
+                  onClick={() => handleCopyEvent(evento.id, evento.link)}
+                  className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors cursor-pointer"
                 >
                   {copiedEventId === evento.id ? 'LINK COPIADO' : 'Copiar Link'}
                 </button>
               </div>
             ))}
-            <button onClick={onBack} className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors">Voltar</button>
+            <button
+              onClick={onBack}
+              className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              Voltar
+            </button>
           </div>
         ) : isRedesSociais ? (
+          /* REDES SOCIAIS */
           <div className="mt-8 space-y-3">
-            <button onClick={() => handleOpenForm(facebookLink)} className="w-full bg-[#1877F2] text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:opacity-90 transition-opacity">Facebook</button>
-            <button onClick={() => handleOpenForm(instagramLink)} className="w-full bg-[#E1306C] text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:opacity-90 transition-opacity">Instagram</button>
-            <button onClick={() => handleOpenForm(tiktokLink)} className="w-full bg-neutral-900 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-black transition-colors">TikTok</button>
-            <button onClick={onBack} className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors">Voltar</button>
+            <button
+              onClick={() => handleOpenForm(facebookLink)}
+              className="w-full bg-[#1877F2] text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:opacity-90 transition-opacity cursor-pointer"
+            >
+              Facebook
+            </button>
+            <button
+              onClick={() => handleOpenForm(instagramLink)}
+              className="w-full bg-[#E1306C] text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:opacity-90 transition-opacity cursor-pointer"
+            >
+              Instagram
+            </button>
+            <button
+              onClick={() => handleOpenForm(tiktokLink)}
+              className="w-full bg-neutral-900 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-black transition-colors cursor-pointer"
+            >
+              TikTok
+            </button>
+            <button
+              onClick={onBack}
+              className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              Voltar
+            </button>
           </div>
         ) : isAvaliacaoFisica ? (
+          /* AVALIAÇÃO FÍSICA */
           <div className="mt-8 space-y-3">
-            <button 
-              onClick={() => handleWhatsApp(avaliacaoFisicaMsg)} 
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors"
+            <button
+              onClick={() => handleWhatsApp(effectiveWhatsappMsg)}
+              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors cursor-pointer"
             >
               Enviar Lembrete pelo WhatsApp
             </button>
-            <button onClick={onBack} className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors">Voltar</button>
-          </div>
-        ) : isAnamnese || isParq || isCadastro ? (
-          <div className="mt-8 space-y-3">
-            <button 
-              onClick={() => handleWhatsApp(isAnamnese ? anamneseMsg : isParq ? parqMsg : cadastroMsg)} 
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors"
+            {effectiveEmailBody && (
+              <button
+                onClick={() => handleEmail(effectiveEmailSubject, effectiveEmailBody)}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-blue-700 transition-colors cursor-pointer"
+              >
+                Enviar Lembrete por E-mail
+              </button>
+            )}
+            <button
+              onClick={onBack}
+              className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors cursor-pointer"
             >
-              Enviar pelo WhatsApp
+              Voltar
             </button>
-            <button 
-              onClick={() => handleEmail(
-                isAnamnese ? 'Anamnese — Evolution Fitness' : isParq ? 'PAR-Q — Evolution Fitness' : 'Cadastro — Evolution Fitness', 
-                isAnamnese ? anamneseMsg : isParq ? parqMsg : cadastroMsg
-              )} 
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-blue-700 transition-colors"
-            >
-              Enviar por E-mail
-            </button>
-            <button 
-              onClick={() => handleCopy(isAnamnese ? anamneseLink : isParq ? parqLink : cadastroLink)} 
-              className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors"
-            >
-              {copied ? 'LINK COPIADO' : 'Copiar Link'}
-            </button>
-            <button 
-              onClick={() => handleOpenForm(isAnamnese ? anamneseLink : isParq ? parqLink : cadastroLink)} 
-              className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors"
-            >
-              Abrir Formulário
-            </button>
-            <button onClick={onBack} className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors">Voltar</button>
           </div>
         ) : isOutros ? (
-          <div className="mt-8 space-y-3">
-            <h2 className="text-lg font-bold uppercase text-black">AVALIAR A EVOLUTION NO GOOGLE</h2>
-            <p className="text-sm text-slate-600">Sua opinião ajuda a Evolution Fitness e outras pessoas a conhecerem nosso trabalho.</p>
-            <button 
-              onClick={() => handleWhatsApp(googleMsg)} 
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors"
+          /* OUTROS RECURSOS: DINÂMICO */
+          <div className="mt-8 space-y-6">
+            {outrosResources.length === 0 ? (
+              <div className="border border-slate-200 rounded-lg p-6 text-center text-slate-500">
+                Nenhum recurso configurado em Outros Recursos no momento.
+              </div>
+            ) : (
+              outrosResources.map((item) => (
+                <div
+                  key={item.id}
+                  className="border border-slate-200 rounded-lg p-5 space-y-3 bg-white shadow-sm"
+                >
+                  <h2 className="text-lg font-bold uppercase text-black tracking-tight">
+                    {item.name}
+                  </h2>
+                  <p className="text-sm text-slate-600">{item.description}</p>
+
+                  {item.link && (
+                    <div className="p-2.5 bg-slate-50 border border-slate-200 rounded text-xs font-mono text-slate-600 break-all select-all">
+                      {item.link}
+                    </div>
+                  )}
+
+                  <div className="space-y-2 pt-1">
+                    {item.link && (
+                      <button
+                        onClick={() => handleOpenForm(item.link)}
+                        className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors cursor-pointer text-sm"
+                      >
+                        {item.buttonText || 'Abrir'}
+                      </button>
+                    )}
+                    {item.link && (
+                      <button
+                        onClick={() => handleCopyEvent(item.id, item.link)}
+                        className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors cursor-pointer text-sm"
+                      >
+                        {copiedEventId === item.id ? 'LINK COPIADO' : 'Copiar Link'}
+                      </button>
+                    )}
+                    {item.whatsappMessage && (
+                      <button
+                        onClick={() => handleWhatsApp(item.whatsappMessage)}
+                        className="w-full bg-green-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors cursor-pointer text-sm"
+                      >
+                        Enviar pelo WhatsApp
+                      </button>
+                    )}
+                    {(item.emailSubject || item.emailBody) && (
+                      <button
+                        onClick={() =>
+                          handleEmail(
+                            item.emailSubject || `${item.name} — Evolution Fitness`,
+                            item.emailBody || item.whatsappMessage
+                          )
+                        }
+                        className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-blue-700 transition-colors cursor-pointer text-sm"
+                      >
+                        Enviar por E-mail
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+            <button
+              onClick={onBack}
+              className="w-full bg-black text-white py-3.5 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors cursor-pointer text-sm"
             >
-              Enviar pelo WhatsApp
+              Voltar
             </button>
-            <button 
-              onClick={() => handleCopy(googleLink)} 
-              className="w-full bg-slate-200 text-slate-800 py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors"
-            >
-              {copied ? 'LINK COPIADO' : 'Copiar Link'}
-            </button>
-            <button 
-              onClick={() => handleOpenForm(googleLink)} 
-              className="w-full bg-red-600 text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors"
-            >
-              Abrir Google
-            </button>
-            <button onClick={onBack} className="w-full bg-black text-white py-3 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors">Voltar</button>
           </div>
         ) : (
-          <div className="mt-8 p-8 border border-slate-200 rounded-lg text-slate-500 text-center">
-            Conteúdo do {feature.title} será implementado nesta tela.
+          /* FORMULÁRIOS E RECURSOS GERAIS (PAR-Q, Anamnese, Cadastro, Novos Recursos) */
+          <div className="mt-8 space-y-3">
+            {/* Exibição do Link Público */}
+            {effectiveLink && (
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-700 break-all select-all">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block font-sans mb-1">
+                  {isNovoAluno
+                    ? 'Link Público do Cadastro de Novo Aluno'
+                    : 'Link Público do Formulário'}
+                </span>
+                {effectiveLink}
+              </div>
+            )}
+
+            {effectiveLink && (
+              <button
+                onClick={() => handleCopy(effectiveLink)}
+                className="w-full bg-slate-200 text-slate-800 py-3.5 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-300 transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm"
+              >
+                <span>📋</span>{' '}
+                {copied
+                  ? 'LINK COPIADO COM SUCESSO!'
+                  : isNovoAluno
+                  ? 'Copiar Link Público do Cadastro'
+                  : 'Copiar Link'}
+              </button>
+            )}
+
+            {effectiveWhatsappMsg && (
+              <button
+                onClick={() => handleWhatsApp(effectiveWhatsappMsg)}
+                className="w-full bg-green-600 text-white py-3.5 rounded-lg font-bold uppercase tracking-tight hover:bg-green-700 transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm"
+              >
+                <span>💬</span> Enviar pelo WhatsApp
+              </button>
+            )}
+
+            {(effectiveEmailSubject || effectiveEmailBody) && (
+              <button
+                onClick={() => handleEmail(effectiveEmailSubject, effectiveEmailBody)}
+                className="w-full bg-blue-600 text-white py-3.5 rounded-lg font-bold uppercase tracking-tight hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm"
+              >
+                <span>✉️</span> Enviar por E-mail
+              </button>
+            )}
+
+            {effectiveLink && (
+              <button
+                onClick={() => handleOpenForm(effectiveLink)}
+                className="w-full bg-red-600 text-white py-3.5 rounded-lg font-bold uppercase tracking-tight hover:bg-red-700 transition-colors flex items-center justify-center gap-2 cursor-pointer text-sm"
+              >
+                <span>🔗</span> {effectiveButtonText}
+              </button>
+            )}
+
+            <button
+              onClick={onBack}
+              className="w-full bg-black text-white py-3.5 rounded-lg font-bold uppercase tracking-tight hover:bg-slate-800 transition-colors cursor-pointer text-sm"
+            >
+              Voltar
+            </button>
           </div>
         )}
       </main>
