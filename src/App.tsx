@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import SplashScreen from './components/SplashScreen';
 import HomeScreen from './components/HomeScreen';
 import CadastroNovoAlunoView from './components/CadastroNovoAlunoView';
+import PWAUpdateNotification from './components/PWAUpdateNotification';
 import { isPublicCadastroRoute } from './utils/publicUrl';
 
 export default function App() {
@@ -30,15 +31,18 @@ export default function App() {
     };
   }, []);
 
-  // Se a URL for o link público do Cadastro, abre diretamente o formulário
-  // sem exibir SplashScreen, Central de Atendimento, menus ou ferramentas administrativas
-  if (isPublic) {
-    return <CadastroNovoAlunoView isPublic={true} />;
-  }
-
-  return showSplash ? (
-    <SplashScreen onComplete={() => setShowSplash(false)} />
-  ) : (
-    <HomeScreen />
+  // O componente PWAUpdateNotification é montado no topo para avisar discretamente
+  // sobre novas versões sem interromper a navegação ou formulários em andamento
+  return (
+    <>
+      <PWAUpdateNotification />
+      {isPublic ? (
+        <CadastroNovoAlunoView isPublic={true} />
+      ) : showSplash ? (
+        <SplashScreen onComplete={() => setShowSplash(false)} />
+      ) : (
+        <HomeScreen />
+      )}
+    </>
   );
 }

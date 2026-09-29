@@ -40,6 +40,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
 
   // RESPONSÁVEL (Apenas para menor de idade, determinado pela Data de Nascimento)
   const [nomeResponsavel, setNomeResponsavel] = useState('');
+  const [idadeResponsavel, setIdadeResponsavel] = useState('');
   const [cpfResponsavel, setCpfResponsavel] = useState('');
   const [celularResponsavel, setCelularResponsavel] = useState('');
   const [parentescoResponsavel, setParentescoResponsavel] = useState('');
@@ -157,6 +158,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
         if (d.instagram) setInstagram(d.instagram);
         if (d.plano) setPlano(d.plano);
         if (d.nomeResponsavel) setNomeResponsavel(d.nomeResponsavel);
+        if (d.idadeResponsavel) setIdadeResponsavel(d.idadeResponsavel);
         if (d.cpfResponsavel) setCpfResponsavel(d.cpfResponsavel);
         if (d.celularResponsavel) setCelularResponsavel(d.celularResponsavel);
         if (d.parentescoResponsavel) setParentescoResponsavel(d.parentescoResponsavel);
@@ -210,6 +212,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
           instagram,
           plano,
           nomeResponsavel,
+          idadeResponsavel,
           cpfResponsavel,
           celularResponsavel,
           parentescoResponsavel,
@@ -257,6 +260,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
     instagram,
     plano,
     nomeResponsavel,
+    idadeResponsavel,
     cpfResponsavel,
     celularResponsavel,
     parentescoResponsavel,
@@ -348,12 +352,21 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
     if (isMenorDeIdade) {
       if (
         !nomeResponsavel.trim() ||
+        !idadeResponsavel.trim() ||
         !cpfResponsavel.trim() ||
         !celularResponsavel.trim() ||
         !parentescoResponsavel.trim()
       ) {
         setErrorMessage(
           'Como o aluno é menor de idade, todos os dados do Responsável são obrigatórios.'
+        );
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      const idadeNum = parseInt(idadeResponsavel, 10);
+      if (isNaN(idadeNum) || idadeNum < 18 || idadeNum > 120) {
+        setErrorMessage(
+          'A idade do responsável deve ser de no mínimo 18 e no máximo 120 anos.'
         );
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
@@ -493,6 +506,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
       lines.push('');
       lines.push('*DADOS DO RESPONSÁVEL (ALUNO MENOR)*');
       lines.push(`Nome do Responsável: ${nomeResponsavel.trim()}`);
+      lines.push(`Idade do Responsável: ${idadeResponsavel.trim()} anos`);
       lines.push(`CPF do Responsável: ${cpfResponsavel.trim()}`);
       lines.push(`Celular do Responsável: ${celularResponsavel.trim()}`);
       lines.push(`Parentesco: ${parentescoResponsavel.trim()}`);
@@ -595,6 +609,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
     setInstagram('');
     setPlano(['Evolution On (Musculação)']);
     setNomeResponsavel('');
+    setIdadeResponsavel('');
     setCpfResponsavel('');
     setCelularResponsavel('');
     setParentescoResponsavel('');
@@ -986,6 +1001,22 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
                     value={nomeResponsavel}
                     onChange={(e) => setNomeResponsavel(e.target.value)}
                     placeholder="Nome completo do responsável legal"
+                    className="w-full bg-white border border-amber-300 rounded px-3 py-2.5 text-sm font-medium focus:border-red-600 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Idade do Responsável *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min={18}
+                    max={120}
+                    value={idadeResponsavel}
+                    onChange={(e) => setIdadeResponsavel(e.target.value.replace(/\D/g, ''))}
+                    placeholder="Ex.: 35"
                     className="w-full bg-white border border-amber-300 rounded px-3 py-2.5 text-sm font-medium focus:border-red-600 focus:outline-none"
                   />
                 </div>
@@ -1684,7 +1715,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
               </p>
               {isMenorDeIdade && (
                 <p className="text-amber-800 font-semibold bg-amber-50 p-2 rounded mt-1">
-                  Responsável: {nomeResponsavel} ({parentescoResponsavel}) — Cel:{' '}
+                  Responsável: {nomeResponsavel} ({parentescoResponsavel}) — {idadeResponsavel} anos — Cel:{' '}
                   {celularResponsavel}
                 </p>
               )}

@@ -1,86 +1,93 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
     <!-- Background Gradient -->
-    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#18181b" />
+    <radialGradient id="bgGlow" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="60%" stop-color="#09090b" />
       <stop offset="100%" stop-color="#000000" />
     </radialGradient>
 
-    <!-- Metallic Silver Gradient -->
-    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Metallic Silver / Platinum Gradient -->
+    <linearGradient id="silverShine" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="35%" stop-color="#CBD5E1" />
-      <stop offset="70%" stop-color="#94A3B8" />
-      <stop offset="100%" stop-color="#E2E8F0" />
+      <stop offset="25%" stop-color="#E2E8F0" />
+      <stop offset="60%" stop-color="#94A3B8" />
+      <stop offset="85%" stop-color="#CBD5E1" />
+      <stop offset="100%" stop-color="#FFFFFF" />
     </linearGradient>
 
-    <!-- Bold Red Gradient -->
-    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF2E36" />
+    <!-- Vibrant Athletic Red Gradient -->
+    <linearGradient id="athleticRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3838" />
       <stop offset="50%" stop-color="#DC2626" />
       <stop offset="100%" stop-color="#991B1B" />
     </linearGradient>
 
-    <!-- Subtle Glow Shadow -->
-    <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#DC2626" flood-opacity="0.4" />
+    <!-- Subtle Drop Shadow -->
+    <filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#DC2626" flood-opacity="0.35" />
     </filter>
   </defs>
 
-  <!-- Solid Black Canvas -->
+  <!-- Solid Black Canvas for Maskable Compliance -->
   <rect width="512" height="512" fill="#000000" />
-  <rect width="512" height="512" fill="url(#bgGrad)" />
+  <rect width="512" height="512" fill="url(#bgGlow)" />
 
-  <!-- Outer Silver Geometric Ring (Safe Zone Border) -->
-  <circle cx="256" cy="256" r="230" fill="none" stroke="url(#silverGrad)" stroke-width="4" stroke-opacity="0.4" />
-  <circle cx="256" cy="256" r="222" fill="none" stroke="#DC2626" stroke-width="2" stroke-opacity="0.6" stroke-dasharray="12 6" />
+  <!-- Safe Zone Circular Accent Frame -->
+  <circle cx="256" cy="256" r="235" fill="none" stroke="url(#silverShine)" stroke-width="2" stroke-opacity="0.25" />
+  <circle cx="256" cy="256" r="226" fill="none" stroke="url(#athleticRed)" stroke-width="1.5" stroke-opacity="0.4" stroke-dasharray="8 6" />
 
-  <!-- Central Dynamic Monogram "EF" -->
-  <g transform="translate(0, -10)" filter="url(#redGlow)">
-    <!-- Stylized "E" (Silver and Powerful) -->
-    <!-- E Backbone -->
-    <polygon points="126,110 178,110 148,290 96,290" fill="url(#silverGrad)" />
-    <!-- E Top Bar -->
-    <polygon points="172,110 270,110 262,152 165,152" fill="url(#silverGrad)" />
-    <!-- E Middle Bar (Vibrant Red) -->
-    <polygon points="158,185 242,185 235,222 152,222" fill="url(#redGrad)" />
-    <!-- E Bottom Bar -->
-    <polygon points="144,250 252,250 245,290 137,290" fill="url(#silverGrad)" />
+  <!-- Símbolo EV / Atleta da Identidade Visual Evolution Fitness -->
+  <g transform="translate(0, -18)" filter="url(#logoShadow)">
+    <!-- Cabeça do Atleta em Movimento (Prata) -->
+    <circle cx="270" cy="116" r="20" fill="url(#silverShine)" />
 
-    <!-- Stylized "F" (Red Accent and Forward Slant) -->
-    <!-- F Backbone -->
-    <polygon points="274,110 326,110 296,290 244,290" fill="url(#redGrad)" />
-    <!-- F Top Bar -->
-    <polygon points="320,110 416,110 408,152 313,152" fill="url(#redGrad)" />
-    <!-- F Middle Bar -->
-    <polygon points="306,185 390,185 383,222 299,222" fill="url(#silverGrad)" />
+    <!-- Braço / Asa Superior do Atleta formando o topo do 'E' (Prata) -->
+    <path d="M 240,140 Q 280,128 350,135 Q 365,138 340,158 Q 285,152 246,162 Z" fill="url(#silverShine)" />
 
-    <!-- Forward Chevron / Pulse Accent -->
-    <polygon points="386,250 416,250 398,290 368,290" fill="url(#redGrad)" />
+    <!-- Asa / Barra Central de Impulso em Vermelho -->
+    <path d="M 230,175 Q 275,168 335,174 Q 350,178 328,196 Q 278,190 236,198 Z" fill="url(#athleticRed)" />
+
+    <!-- Barra Inferior do 'E' (Prata) -->
+    <path d="M 218,212 Q 265,206 320,214 Q 335,218 316,234 Q 268,228 224,236 Z" fill="url(#silverShine)" />
+
+    <!-- Tronco Dinâmico / Dorsal do Atleta formando a descida do 'V' (Prata e Vermelho) -->
+    <!-- Coluna Esquerda 'E' -->
+    <path d="M 210,132 L 246,132 L 208,278 L 172,278 Z" fill="url(#silverShine)" />
+
+    <!-- Vértice do 'V' em corte atlético (Vermelho vibrante) -->
+    <path d="M 208,278 L 248,155 L 284,155 L 228,298 Q 218,308 206,298 L 172,278 Z" fill="url(#athleticRed)" />
+
+    <!-- Perna / Vetor de Velocidade Direito do 'V' -->
+    <path d="M 228,298 L 322,142 L 358,142 L 252,308 Q 240,318 228,298 Z" fill="url(#silverShine)" />
+    <path d="M 268,270 L 340,165 L 366,165 L 284,285 Z" fill="url(#athleticRed)" />
+
+    <!-- Ponto de Foco e Ritmo Dinâmico -->
+    <polygon points="160,250 190,250 180,272 150,272" fill="url(#athleticRed)" opacity="0.8" />
   </g>
 
-  <!-- Typography: EVOLUTION (Silver) -->
-  <text x="256" y="360"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+  <!-- Tipografia Oficial: EVOLUTION (Prata Platinum) -->
+  <text x="256" y="362"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
         font-size="34"
         font-weight="900"
         letter-spacing="5"
-        fill="url(#silverGrad)"
+        fill="url(#silverShine)"
         text-anchor="middle">
     EVOLUTION
   </text>
 
-  <!-- Typography: FITNESS (Red) -->
-  <text x="256" y="405"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="30"
+  <!-- Tipografia Oficial: FITNESS (Vermelho Atlético) -->
+  <text x="256" y="406"
+        font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="29"
         font-weight="900"
         letter-spacing="8"
-        fill="url(#redGrad)"
+        fill="url(#athleticRed)"
         text-anchor="middle">
     FITNESS
   </text>
 
-  <!-- Bottom Accent Stripe -->
-  <rect x="186" y="425" width="140" height="4" rx="2" fill="url(#silverGrad)" />
+  <!-- Linha de Base / Divisor Atlético -->
+  <rect x="180" y="424" width="152" height="3" rx="1.5" fill="url(#silverShine)" opacity="0.75" />
 </svg>
