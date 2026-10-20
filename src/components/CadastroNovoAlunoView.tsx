@@ -40,7 +40,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
 
   // RESPONSÁVEL (Apenas para menor de idade, determinado pela Data de Nascimento)
   const [nomeResponsavel, setNomeResponsavel] = useState('');
-  const [idadeResponsavel, setIdadeResponsavel] = useState('');
+  const [nascimentoResponsavel, setNascimentoResponsavel] = useState('');
   const [cpfResponsavel, setCpfResponsavel] = useState('');
   const [celularResponsavel, setCelularResponsavel] = useState('');
   const [parentescoResponsavel, setParentescoResponsavel] = useState('');
@@ -212,7 +212,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
           instagram,
           plano,
           nomeResponsavel,
-          idadeResponsavel,
+          nascimentoResponsavel,
           cpfResponsavel,
           celularResponsavel,
           parentescoResponsavel,
@@ -260,7 +260,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
     instagram,
     plano,
     nomeResponsavel,
-    idadeResponsavel,
+    nascimentoResponsavel,
     cpfResponsavel,
     celularResponsavel,
     parentescoResponsavel,
@@ -352,21 +352,13 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
     if (isMenorDeIdade) {
       if (
         !nomeResponsavel.trim() ||
-        !idadeResponsavel.trim() ||
+        !nascimentoResponsavel ||
         !cpfResponsavel.trim() ||
         !celularResponsavel.trim() ||
         !parentescoResponsavel.trim()
       ) {
         setErrorMessage(
           'Como o aluno é menor de idade, todos os dados do Responsável são obrigatórios.'
-        );
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-      const idadeNum = parseInt(idadeResponsavel, 10);
-      if (isNaN(idadeNum) || idadeNum < 18 || idadeNum > 120) {
-        setErrorMessage(
-          'A idade do responsável deve ser de no mínimo 18 e no máximo 120 anos.'
         );
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
@@ -506,7 +498,9 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
       lines.push('');
       lines.push('*DADOS DO RESPONSÁVEL (ALUNO MENOR)*');
       lines.push(`Nome do Responsável: ${nomeResponsavel.trim()}`);
-      lines.push(`Idade do Responsável: ${idadeResponsavel.trim()} anos`);
+      const idadeResp = calcularIdade(nascimentoResponsavel);
+lines.push(`Data de Nascimento do Responsável: ${formatDateBR(nascimentoResponsavel)}`);
+lines.push(`Idade do Responsável: ${idadeResp !== null ? `${idadeResp} anos` : 'Não calculada'}`);
       lines.push(`CPF do Responsável: ${cpfResponsavel.trim()}`);
       lines.push(`Celular do Responsável: ${celularResponsavel.trim()}`);
       lines.push(`Parentesco: ${parentescoResponsavel.trim()}`);
@@ -609,7 +603,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
     setInstagram('');
     setPlano(['Evolution On (Musculação)']);
     setNomeResponsavel('');
-    setIdadeResponsavel('');
+    setNascimentoResponsavel('');
     setCpfResponsavel('');
     setCelularResponsavel('');
     setParentescoResponsavel('');
