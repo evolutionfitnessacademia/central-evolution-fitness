@@ -158,7 +158,7 @@ export default function CadastroNovoAlunoView({ onBack, isPublic = false }: Cada
         if (d.instagram) setInstagram(d.instagram);
         if (d.plano) setPlano(d.plano);
         if (d.nomeResponsavel) setNomeResponsavel(d.nomeResponsavel);
-        if (d.idadeResponsavel) setIdadeResponsavel(d.idadeResponsavel);
+        if (d.nascimentoResponsavel) setNascimentoResponsavel(d.nascimentoResponsavel);
         if (d.cpfResponsavel) setCpfResponsavel(d.cpfResponsavel);
         if (d.celularResponsavel) setCelularResponsavel(d.celularResponsavel);
         if (d.parentescoResponsavel) setParentescoResponsavel(d.parentescoResponsavel);
@@ -1000,20 +1000,18 @@ lines.push(`Idade do Responsável: ${idadeResp !== null ? `${idadeResp} anos` : 
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    Idade do Responsável *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min={18}
-                    max={120}
-                    value={idadeResponsavel}
-                    onChange={(e) => setIdadeResponsavel(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Ex.: 35"
-                    className="w-full bg-white border border-amber-300 rounded px-3 py-2.5 text-sm font-medium focus:border-red-600 focus:outline-none"
-                  />
-                </div>
+  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+    Data de Nascimento do Responsável *
+  </label>
+  <input
+    type="date"
+    required
+    value={nascimentoResponsavel}
+    max={new Date().toISOString().split('T')[0]}
+    onChange={(e) => setNascimentoResponsavel(e.target.value)}
+    className="w-full bg-white border border-amber-300 rounded px-3 py-2.5 text-sm font-medium focus:border-red-600 focus:outline-none"
+  />
+</div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
